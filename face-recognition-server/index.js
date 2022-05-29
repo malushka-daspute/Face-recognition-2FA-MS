@@ -5,7 +5,8 @@ const mongoose = require('mongoose');
 
 
 //MongoDB local URL
-const database = "mongodb://localhost:27017/face-recognition";
+//const database = "mongodb://localhost:27017/face-recognition";
+const database = "mongodb+srv://Malushka1:Malushka1@cluster0.xp193.mongodb.net/?retryWrites=true&w=majority";
 
 // DB connection
 mongoose.connect(database, {useUnifiedTopology: true, useNewUrlParser: true })
