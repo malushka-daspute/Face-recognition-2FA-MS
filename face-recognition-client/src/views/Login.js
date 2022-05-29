@@ -25,6 +25,8 @@ class Login extends Component {
       errorFromApi: "",
     };
   }
+
+  //form validations
   onChangeForm = async (field, e) => {
     let error = this.state.error;
     let isValidField = this.state.isValidField;
@@ -60,18 +62,19 @@ class Login extends Component {
       await this.setState({ isSubmitDisable: true });
     }
   };
+
+  //submit form validation
   onSubmitForm = async (event) => {
     event.preventDefault();
     let user = this.state.field;
-    console.log(user);
+    //calling post api to check user's credentials 
+    //if credentials are valid, we'll get faceEncoding Image in response
     axios
       .post("http://localhost:5000/login", user)
       .then((data) => {
-        console.log("data sent  :  ", data.data);
         this.setState({ faceEncoding: data.data });
       })
       .catch((err) => {
-        console.log(err.response.data.message);
         this.setState({ errorFromApi: err.response.data.message });
       });
   };

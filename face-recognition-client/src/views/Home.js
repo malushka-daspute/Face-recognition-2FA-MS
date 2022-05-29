@@ -27,6 +27,7 @@ class Home extends Component {
     };
   }
 
+  //form validations
   onChangeForm = async (field, e) => {
     let error = this.state.error;
     let isValidField = this.state.isValidField;
@@ -75,14 +76,10 @@ class Home extends Component {
       await this.setState({ isSubmitDisable: true });
     }
   };
+
   onSubmitForm = async (event) => {
     event.preventDefault();
     this.setState({ isScanFaceEnable: true });
-  };
-
-  userImageLoad = (faceImage) => {
-    console.log("faceImage   ::    ", faceImage);
-    this.setState({ faceImage: faceImage, isModalOpen: false });
   };
 
   render() {
@@ -110,8 +107,6 @@ class Home extends Component {
                     <form
                       className="form"
                       name="SignUp"
-                      // action="/mfa"
-                      // method="POST"
                       onSubmit={this.onSubmitForm}
                     >
                       <div className="form-group">

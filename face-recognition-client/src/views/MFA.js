@@ -20,15 +20,17 @@ class MFA extends Component {
       descriptorsVideo: null,
       match: null,
       facingMode: null,
-      faceEncoding: props.faceEncoding,
+      faceEncoding: props.faceEncoding, //setting state from given props
       isValidUser: false,
       faceNotRecognizeCount: 0,
     };
   }
 
+
   componentWillMount = async () => {
     await loadModels();
 
+    //setting face descriptor of face from signup 
     getFullFaceDescription(this.state.faceEncoding, inputSize).then(
       (fullDesc) => {
         if (!!fullDesc) {
@@ -39,11 +41,11 @@ class MFA extends Component {
         }
       }
     );
-    //  });
     this.setInputDevice();
   };
 
   setInputDevice = () => {
+    //detect input devices
     navigator.mediaDevices.enumerateDevices().then(async (devices) => {
       let inputDevice = await devices.filter(
         (device) => device.kind === "videoinput"
@@ -62,11 +64,13 @@ class MFA extends Component {
   };
 
   startCapture = () => {
+    //capture screenshot after every 1500 milliseconds
     this.interval = setInterval(() => {
       this.capture();
     }, 1500);
   };
 
+  //stop capturing screenshots when component unmount
   componentWillUnmount() {
     clearInterval(this.interval);
   }
@@ -77,13 +81,14 @@ class MFA extends Component {
         this.webcam.current.getScreenshot(),
         inputSize
       ).then(async (fullDesc) => {
-        console.log("Video  :  ", fullDesc);
         if (fullDesc && fullDesc.length > 0) {
+          // setting state of face descriptor
           await this.setState({
             descriptors: fullDesc[0].descriptor,
             detections: fullDesc.map((fd) => fd.detection),
           });
           clearInterval(this.interval);
+          //face recognition by comparing face from login and signup 
           if (
             !!fullDesc[0].descriptor &&
             !!this.state.descriptorsVideo[0] &&
@@ -93,12 +98,11 @@ class MFA extends Component {
               fullDesc[0].descriptor,
               this.state.descriptorsVideo[0]
             );
-            console.log(distance);
             if (distance < 0.62) {
-              console.log("Congratulations!!!");
+              console.log("Congratulations!!!, User is recognised");
               this.setState({ isValidUser: true, faceNotRecognizeCount: 0 });
             } else {
-              console.log("Bad");
+              console.log("User not recognised");
               this.setState({
                 isValidUser: false,
                 faceNotRecognizeCount: this.state.faceNotRecognizeCount + 1,
